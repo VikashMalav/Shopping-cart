@@ -1,15 +1,24 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
+import { useContext } from 'react'
 import './Shopping.css'
+// import ContextApi from './ContextApi'
+import Header from './Header'
 
 function ShoppingCart() {
+
   let [product, setProduct] = useState([])
-  let [cart, setCart] = useState((sessionStorage.getItem('cartItem') === null) ? [] : JSON.parse(sessionStorage.getItem('cartItem')))
+  let [cart, setCart] = useState((sessionStorage.getItem('cartItem') === null) ?
+   [] 
+   : JSON.parse(sessionStorage.getItem('cartItem')))
+
+  // const cartContext=React.useContext('cart')
 
   useEffect(() => {
-    async function fetch() {
-      const item = await axios.get('https://dummyjson.com/products')
-      setProduct(item.data.products)
+    async function fetch() { 
+      const item = await axios.get('https://fakestoreapi.com/products/')
+      setProduct(item.data)
+      console.log(item)
     }
     fetch()
   }, [])
@@ -27,18 +36,14 @@ function ShoppingCart() {
 
   return (
     <div>
-      <header>
-        <h1>Shopping Cart</h1>
-        <a href='#'>Cart<sup>{cart.length}</sup></a>
-
-      </header>
+ 
       <div className='shopping'>
         {
           product.map((item, index) => {
             return (
               <div className='pro' key={index}>
-                <img src={item.thumbnail} ></img>
-                <a href='#' onClick={(e) => addToCart(e, index)}>Add To Cart</a>
+                <img src={item.image} ></img>
+                <a onClick={(e) => addToCart(e, index)}>Add To Cart</a>
               </div>
             )
           })
